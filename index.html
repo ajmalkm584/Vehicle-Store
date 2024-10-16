@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Store - Home</title>
+    <link rel="icon" href="img/muscle-car-logo-illustration-emblem-design-on-white-background-free-vector.jpg">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Vehicle Store</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Cart.html">Cart</a></li>
+                <li><a href="chaeckout.html">checkout</a></li>
+                <li><a href="confirmation.html">confirmation</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Available Vehicles</h2>
+        <div class="product-grid">
+            <!-- Example Product -->
+            <div class="product-card">
+                <img src="img/901406346314f56de9a0c5d9c0486ad7.jpg" alt="Car Model 1">
+                <h3>Car Model 1</h3>
+                <p>Price: $20,000</p>
+                <button>Add to Cart</button>
+            </div>
+            <!-- Repeat similar blocks for other vehicles -->
+            <div class="product-card">
+                <img src="img/f612938048d0be52759abfef3a1765e8.jpg" alt="Bike Model 1">
+                <h3>Bike Model 1</h3>
+                <p>Price: $5,000</p>
+                <button>Add to Cart</button>
+            </div>
+            <!-- Add more products as needed -->
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Vehicle Store. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>
+
+
+<script src="js/scripts.js"></script>
+
+<script>
+    // js/scripts.js
+
+    // Function to add item to cart
+    function addToCart(productName, productPrice) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingProduct = cart.find(item => item.name === productName);
+
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push({ name: productName, price: productPrice, quantity: 1 });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert(`${productName} has been added to your cart.`);
+    }
+
+    // Attach event listeners to "Add to Cart" buttons
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.product-card button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const productCard = button.parentElement;
+                const productName = productCard.querySelector('h3').innerText;
+                const productPriceText = productCard.querySelector('p').innerText;
+                const productPrice = parseFloat(productPriceText.replace('Price: $', ''));
+
+                addToCart(productName, productPrice);
+            });
+        });
+    });
+
+    // js/scripts.js (add this code)
+
+    function displayCart() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartItemsContainer = document.getElementById('cart-items');
+        let totalAmount = 0;
+
+        cartItemsContainer.innerHTML = '';
+
+        cart.forEach(item => {
+            const row = document.createElement('tr');
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = item.name;
+
+            const priceCell = document.createElement('td');
+            priceCell.textContent = `$${item.price.toLocaleString()}`;
+
+            const quantityCell = document.createElement('td');
+            quantityCell.textContent = item.quantity;
+
+            const totalCell = document.createElement('td');
+            const total = item.price * item.quantity;
+            totalCell.textContent = `$${total.toLocaleString()}`;
+            totalAmount += total;
+
+            row.appendChild(nameCell);
+            row.appendChild(priceCell);
+            row.appendChild(quantityCell);
+            row.appendChild(totalCell);
+
+            cartItemsContainer.appendChild(row);
+        });
+
+        document.querySelector('.cart-summary p').textContent = `Total Amount: $${totalAmount.toLocaleString()}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.location.pathname.endsWith('cart.html')) {
+            displayCart();
+        }
+    });
+
+    // js/scripts.js (add this code)
+
+    function confirmOrder() {
+        // Here you would handle form data and send it to the server
+        // For this example, we'll just clear the cart and redirect to confirmation
+
+        localStorage.removeItem('cart');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.location.pathname.endsWith('confirmation.html')) {
+            // Order confirmation logic can be added here if needed
+        }
+
+        const checkoutForm = document.querySelector('form');
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                confirmOrder();
+                window.location.href = 'confirmation.html';
+            });
+        }
+    });
+
+
+</script>
